@@ -1,0 +1,70 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bycrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import { Like, Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+
+  create(createUserDto: CreateUserDto): Promise<User> {
+    return bycrypt.hash(createUserDto.password, 10).then((hashed) =>
+      this.userRepository.save({
+        ...createUserDto,
+        password: hashed,
+      }),
+    );
+  }
+
+  async findById(id: number): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    return await this.userRepository.findOneBy({ username });
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return await this.userRepository.findOneBy({ email });
+  }
+
+  async updateOne(user: User, updateUserDto: UpdateUserDto) {
+    let updatedUser = {};
+
+    if (updateUserDto.hasOwnProperty('password')) {
+      updatedUser = await bycrypt.hash(updateUserDto.password, 10).then(
+        async (hashed) =>
+          await this.userRepository.save({
+            ...user,
+            ...updateUserDto,
+            password: hashed,
+          }),
+      );
+    } else {
+      updatedUser = await this.userRepository.save({
+        ...user,
+        ...updateUserDto,
+      });
+    }
+
+    return updatedUser;
+  }
+
+  async findMany(query: string) {
+    const users = await this.userRepository.find({
+      where: [{ username: Like(`%${query}%`) }, { email: Like(`%${query}%`) }],
+    });
+
+    if (!users.length) {
+      throw new Error();
+    }
+
+    return users;
+  }
+}
