@@ -18,7 +18,7 @@ import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(WishInterceptor)
-@Controller('wishlists')
+@Controller('wishlistlists')
 export class WishlistsController {
   constructor(private wishlistsService: WishlistsService) {}
 
