@@ -14,8 +14,8 @@ import { UserInterceptor } from 'src/interceptors/user.interceptor';
 import { UsersService } from './users.service';
 import { WishesService } from 'src/wishes/wishes.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPublicInterceptor } from 'src/interceptors/user-public.interceptor';
 
-@UseInterceptors(UserInterceptor)
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
@@ -24,16 +24,19 @@ export class UsersController {
     private wishesService: WishesService,
   ) {}
 
+  @UseInterceptors(UserInterceptor)
   @Get('me')
   findMe(@Req() req) {
     return req.user;
   }
 
+  @UseInterceptors(UserInterceptor)
   @Patch('me')
   update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateOne(req.user, updateUserDto);
   }
 
+  @UseInterceptors(UserPublicInterceptor)
   @Get(':username')
   async findOne(@Param('username') username: string) {
     const user = await this.usersService.findByUsername(username);
@@ -62,6 +65,7 @@ export class UsersController {
     return await this.wishesService.findUsersWishes(user.id);
   }
 
+  @UseInterceptors(UserPublicInterceptor)
   @Post('find')
   async findMany(@Body('query') query: string) {
     return await this.usersService.findMany(query);

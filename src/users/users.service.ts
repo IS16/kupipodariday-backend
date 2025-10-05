@@ -70,7 +70,7 @@ export class UsersService {
     });
 
     if (!users.length) {
-      throw new Error();
+      return [];
     }
 
     return users;
