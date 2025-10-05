@@ -65,6 +65,10 @@ export class User {
   @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
   wishlist: Wishlist;
 
-  @OneToMany(() => Offer, (offer) => offer.id)
+  @OneToMany(() => Offer, (offer) => offer.id, {
+    cascade: true, // автоматически сохраняет/обновляет/удаляет связанные сущности
+    onDelete: 'CASCADE', // при удалении родителя удаляются связанные записи
+    onUpdate: 'CASCADE', // при обновлении — обновляются связанные записи
+  })
   offers: Offer[];
 }
