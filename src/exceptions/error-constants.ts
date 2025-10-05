@@ -34,7 +34,7 @@ export const code2message = new Map<ErrorCode, string>([
 
 export const code2status = new Map<ErrorCode, HttpStatus>([
   [ErrorCode.LoginOrPasswordIncorrect, HttpStatus.BAD_REQUEST],
-  [ErrorCode.UserAlreadyExist, HttpStatus.BAD_REQUEST],
+  [ErrorCode.UserAlreadyExist, HttpStatus.CONFLICT],
   [ErrorCode.AccessDenied, HttpStatus.FORBIDDEN],
   [ErrorCode.UserNotFound, HttpStatus.NOT_FOUND],
   [ErrorCode.UsersNotFound, HttpStatus.NOT_FOUND],

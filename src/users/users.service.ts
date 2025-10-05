@@ -5,6 +5,8 @@ import { User } from './entities/user.entity';
 import { Like, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ServerException } from 'src/exceptions/exception-constructor';
+import { ErrorCode } from 'src/exceptions/error-constants';
 
 @Injectable()
 export class UsersService {
@@ -13,13 +15,19 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
-    return bycrypt.hash(createUserDto.password, 10).then((hashed) =>
-      this.userRepository.save({
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const hash = await bycrypt.hash(createUserDto.password, 10);
+
+    try {
+      return await this.userRepository.save({
         ...createUserDto,
-        password: hashed,
-      }),
-    );
+        password: hash,
+      });
+    } catch (err) {
+      if (err.code === '23505') {
+        throw new ServerException(ErrorCode.UserAlreadyExist);
+      }
+    }
   }
 
   async findById(id: number): Promise<User> {
