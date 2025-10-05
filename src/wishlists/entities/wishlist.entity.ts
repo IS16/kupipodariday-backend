@@ -1,4 +1,3 @@
-import { IsString, IsUrl, Length, Max } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import {
@@ -21,8 +20,6 @@ export class Wishlist {
     type: 'varchar',
     length: 250,
   })
-  @IsString()
-  @Length(1, 250)
   name: string;
 
   @Column({
@@ -30,14 +27,11 @@ export class Wishlist {
     length: 1500,
     nullable: true,
   })
-  @IsString()
-  @Max(1500)
   description: string;
 
   @Column({
     type: 'varchar',
   })
-  @IsUrl()
   image: string;
 
   @CreateDateColumn()

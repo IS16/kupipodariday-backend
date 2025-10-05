@@ -1,4 +1,3 @@
-import { IsEmail, IsString, IsUrl, Length } from 'class-validator';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
@@ -22,8 +21,6 @@ export class User {
     unique: true,
     nullable: false,
   })
-  @IsString()
-  @Length(2, 30)
   username: string;
 
   @Column({
@@ -31,26 +28,21 @@ export class User {
     length: 200,
     default: 'Пока ничего не рассказал о себе',
   })
-  @IsString()
-  @Length(2, 200)
   about: string;
 
   @Column({
     type: 'varchar',
     default: 'https://i.pravatar.cc/300',
   })
-  @IsUrl()
   avatar: string;
 
   @Column({
     type: 'varchar',
     unique: true,
   })
-  @IsEmail()
   email: string;
 
   @Column()
-  @IsString()
   password: string;
 
   @CreateDateColumn()

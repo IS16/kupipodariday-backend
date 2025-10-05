@@ -1,4 +1,3 @@
-import { IsBoolean, IsInt } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import {
@@ -25,11 +24,9 @@ export class Offer {
   item: Wish;
 
   @Column({ select: true })
-  @IsInt()
   amount: number;
 
   @Column({ select: false })
-  @IsBoolean()
   hidden: boolean;
 
   @CreateDateColumn()
