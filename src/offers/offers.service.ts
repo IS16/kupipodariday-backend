@@ -71,9 +71,13 @@ export class OffersService {
   }
 
   async findAll() {
-    return await this.offerRepository.find({
-      relations: ['items'],
-    });
+    try {
+      return await this.offerRepository.find({
+        relations: ['items'],
+      });
+    } catch (err) {
+      return await this.offerRepository.find({});
+    }
   }
 
   async findOne(id: number) {
